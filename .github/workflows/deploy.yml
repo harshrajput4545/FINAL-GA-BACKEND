@@ -22,6 +22,6 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
           script: |
-            cd /path/to/your/application
+            cd /FINAL-GA-BACKEND
             git pull origin main
             docker compose up -d --build
