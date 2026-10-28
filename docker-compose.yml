@@ -1,9 +1,9 @@
 
+
 services:
   app:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: harshrajput29/ga-backend:latest
+    container_name: ga-backend
     restart: unless-stopped
     ports:
       - "8000:8000"
