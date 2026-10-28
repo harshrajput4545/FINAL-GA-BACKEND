@@ -1,6 +1,7 @@
 
 
 
+
 name: Deploy Nodejs Application to EC2
 
 on:
@@ -27,30 +28,50 @@ jobs:
           script: |
             set -e
 
-            echo "User:"
-            whoami
+            echo "=================================="
+            echo "Starting EC2 deployment"
+            echo "=================================="
 
-            echo "Project directory:"
+            echo "Changing to project directory..."
             cd /FINAL-GA-BACKEND
-            pwd
 
-            echo "Verify Git repository:"
+            echo "Verifying Git repository..."
             git rev-parse --show-toplevel
 
-            echo "Fetch latest code:"
+            echo "Fetching latest code from GitHub..."
             git fetch origin main
 
-            echo "Update code:"
+            echo "Updating working directory..."
             git reset --hard origin/main
 
-            echo "Latest commit:"
+            echo "Latest deployed commit:"
             git log -1 --oneline
 
-            echo "Rebuild and restart containers:"
+            echo "Rebuilding and restarting Docker..."
             sudo docker compose up -d --build --force-recreate
 
-            echo "Container status:"
+            echo "Checking container status..."
             sudo docker compose ps
 
-            echo "API health check:"
-            curl -fsS --max-time 10 http://localhost:8000/
+            echo "Waiting for API to become ready..."
+
+            for i in $(seq 1 10); do
+              if curl -fsS --max-time 3 http://127.0.0.1:8000/; then
+                echo ""
+                echo "API is responding successfully!"
+                break
+              fi
+
+              echo "Attempt $i failed. Retrying in 3 seconds..."
+              sleep 3
+
+              if [ "$i" -eq 10 ]; then
+                echo "API health check failed!"
+                sudo docker compose logs --tail=100 app
+                exit 1
+              fi
+            done
+
+            echo "=================================="
+            echo "Deployment completed successfully!"
+            echo "=================================="
