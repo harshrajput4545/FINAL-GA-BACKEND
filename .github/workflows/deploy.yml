@@ -1,6 +1,7 @@
 
 
-name: Deploy Nodejs Application to Hostinger
+
+name: Deploy Nodejs Application to EC2
 
 on:
   push:
@@ -22,16 +23,34 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
+          script_stop: true
           script: |
             set -e
-              echo "Fetching latest code..."
-              git fetch origin main
 
-              echo "Updating working directory..."
-              git reset --hard origin/main
+            echo "User:"
+            whoami
 
-              echo "Building latest Docker image..."
-              sudo docker compose up -d --build --force-recreate
+            echo "Project directory:"
+            cd /FINAL-GA-BACKEND
+            pwd
 
-              echo "Checking running containers..."
-              sudo docker compose ps
+            echo "Verify Git repository:"
+            git rev-parse --show-toplevel
+
+            echo "Fetch latest code:"
+            git fetch origin main
+
+            echo "Update code:"
+            git reset --hard origin/main
+
+            echo "Latest commit:"
+            git log -1 --oneline
+
+            echo "Rebuild and restart containers:"
+            sudo docker compose up -d --build --force-recreate
+
+            echo "Container status:"
+            sudo docker compose ps
+
+            echo "API health check:"
+            curl -fsS --max-time 10 http://localhost:8000/
