@@ -19,7 +19,7 @@ app.use((req, res, next) => {
 app.get("/", (req, res) => {
   res.status(200).json({
     success: true,
-    message: "latest commit is commit 12🚀",
+    message: "latest commit is commit 15🚀",
     version: "1.0.0",
     endpoints: ["/health", "/api/info", "/api/users"],
   });
