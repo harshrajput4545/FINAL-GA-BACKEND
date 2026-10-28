@@ -19,7 +19,7 @@ app.use((req, res, next) => {
 app.get("/", (req, res) => {
   res.status(200).json({
     success: true,
-    message: "ITS DONE BRO 🚀",
+    message: "code is changed 🚀",
     version: "1.0.0",
     endpoints: ["/health", "/api/info", "/api/users"],
   });
