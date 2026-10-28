@@ -2,7 +2,7 @@
 import express from "express";
 
 const app = express();
-const PORT = process.env.PORT || 8000;
+const PORT = process.env.PORT || 4000;
 
 // Middleware
 app.use(express.json());
@@ -19,7 +19,7 @@ app.use((req, res, next) => {
 app.get("/", (req, res) => {
   res.status(200).json({
     success: true,
-    message: "its done bro🚀",
+    message: "latest commit is commit 12🚀",
     version: "1.0.0",
     endpoints: ["/health", "/api/info", "/api/users"],
   });
